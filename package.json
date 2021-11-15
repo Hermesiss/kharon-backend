@@ -21,7 +21,8 @@
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.5.9",
         "mongoose": "^5.9.21",
-        "rootpath": "^0.1.2"
+        "rootpath": "^0.1.2",
+        "semver": "^7.3.5"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"

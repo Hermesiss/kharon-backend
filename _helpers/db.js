@@ -1,13 +1,15 @@
-const config = require('config.json');
 const mongoose = require('mongoose');
-const dotenv = require("dotenv");
 
-dotenv.config();
+require("dotenv").config();
 
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
-mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionOptions);
+mongoose.connect(process.env.MONGODB_URI, connectionOptions);
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    User: require('../users/user.model')
+    User: require('../entities/users/user.model').User,
+    App: require('../entities/apps/app.model').App,
+    Company: require('../entities/companies/company.model').Company
 };
+
+
