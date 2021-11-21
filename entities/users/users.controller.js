@@ -2,7 +2,7 @@
 const router = express.Router();
 const service = require('./user.service');
 const {Roles} = require("./user.model");
-const {checkRole, checkCompany} = require("../../_helpers/checkers");
+const {checkRole, checkUserCompany} = require("../../_helpers/checkers");
 const {BasicCrud} = require("../../_helpers/crud");
 
 const crud = new BasicCrud(service)
@@ -13,9 +13,9 @@ router.post('/create', checkRole(Roles.Owner), crud.create);
 router.get('/', checkRole(Roles.Owner), crud.getAll);
 router.get('/myCompany', checkRole(Roles.Owner), getByCompany);
 router.get('/current', getCurrent);
-router.get('/:id', checkRole(Roles.Owner), checkCompany, crud.getById);
-router.put('/:id', checkRole(Roles.Owner), checkCompany, crud.update);
-router.delete('/:id', checkRole(Roles.Owner), checkCompany, crud._delete);
+router.get('/:id', checkRole(Roles.Owner), checkUserCompany, crud.getById);
+router.put('/:id', checkRole(Roles.Owner), checkUserCompany, crud.update);
+router.delete('/:id', checkRole(Roles.Owner), checkUserCompany, crud._delete);
 
 module.exports = router;
 

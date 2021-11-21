@@ -1,22 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const service = require('./app.service');
-const {checkRole} = require("../../_helpers/checkers");
+const {checkRole, checkAppCompany} = require("../../_helpers/checkers");
 
 const {BasicCrud} = require("../../_helpers/crud");
 const {Roles} = require("../users/user.model");
 
 const crud = new BasicCrud(service)
 
-router.post('/create', checkRole(Roles.Owner), crud.create);
+router.post('/create', checkRole(Roles.Admin), crud.create);
 router.get('/', checkRole(Roles.Admin), crud.getAll);
-router.get('/:id', checkRole(Roles.Owner), crud.getById);
-router.put('/:id', checkRole(Roles.Owner), crud.update);
-router.delete('/:id', checkRole(Roles.Owner), crud._delete);
+router.get('/:id', checkAppCompany, crud.getById);
+router.put('/:id', checkRole(Roles.Admin), crud.update);
+router.delete('/:id', checkRole(Roles.Admin), crud._delete);
 
-router.post('/:id/version', checkRole(Roles.Owner), addVersion);
-router.put('/:id/version', checkRole(Roles.Owner), updateVersion);
-router.delete('/:id/version', checkRole(Roles.Owner), deleteVersion);
+router.post('/:id/version', checkRole(Roles.Admin), addVersion);
+router.put('/:id/version', checkRole(Roles.Admin), updateVersion);
+router.delete('/:id/version', checkRole(Roles.Admin), deleteVersion);
 
 module.exports = router;
 

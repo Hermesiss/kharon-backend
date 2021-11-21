@@ -3,11 +3,12 @@ const {SemverType} = require("../../_helpers/semver");
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+    published: {type: Boolean, default: false},
     appName: {type: String, unique: true, required: true},
     appCode: {type: String, unique: true, required: true},
     rootPath: {type: String, unique: true, required: true},
     createdDate: {type: Date, default: Date.now},
-    company: {type: Schema.Types.ObjectId, ref: 'Company'},
+    company: {type: Schema.Types.ObjectId, ref: 'Company', required: true},
     versions: [{
         version: {type: SemverType, default: '1.0.0'},
         date: {type: Date, default: Date.now},

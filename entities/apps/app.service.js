@@ -1,5 +1,5 @@
 const db = require('_helpers/db');
-const App = db.App;
+const {App, Company} = db;
 
 module.exports = {
     getAll,
@@ -58,17 +58,57 @@ async function create(param) {
         throw 'App "' + param.appCode + '" is already taken';
     }
 
+    const company = await Company.findById(param.company)
+
     const app = new App(param);
 
     await app.save();
+
+    company.apps.push(app)
+
+    await company.save()
+}
+
+async function deleteAppFromCompany(company, id) {
+    const index = company.apps.findIndex(x => x.toString() === id);
+
+    if (index >= 0) {
+        company.apps.splice(index, 1);
+        await company.save()
+    }
 }
 
 async function update(id, param) {
     const app = await App.findById(id);
 
     if (!app) throw 'App not found';
+
     if (app.appCode !== param.appCode && await App.findOne({appCode: param.appCode})) {
         throw 'App with code "' + param.appCode + '" is already taken';
+    }
+
+    if (param.company && app.company.toString() !== param.company) {
+        const oldCompany = await Company.findById(app.company)
+        console.log(oldCompany)
+        if (oldCompany) {
+            await deleteAppFromCompany(oldCompany, app.id);
+        }
+
+        const newCompany = await Company.findById(param.company)
+
+        if (!newCompany) {
+            throw `Cannot find company ${param.company}`;
+        }
+
+        if (newCompany.apps.indexOf(app.id) === -1) {
+            newCompany.apps.push(app.id);
+        }
+
+        await newCompany.save()
+
+        console.log(`Changing company ${oldCompany} to ${newCompany}`)
+    } else {
+        console.log(`No need to change company, ${param.company} equals ${app.company.toString()}`)
     }
 
     Object.assign(app, param);
@@ -77,5 +117,10 @@ async function update(id, param) {
 }
 
 async function _delete(id) {
+    const companies = await Company.find({"apps": { $elemMatch: { $eq: id}}})
+    for (const company of companies) {
+        await deleteAppFromCompany(company, id)
+    }
+
     await App.findByIdAndRemove(id);
 }

@@ -1,5 +1,6 @@
 const db = require('_helpers/db');
 const Company = db.Company;
+const App = db.App
 
 module.exports = {
     getAll,
@@ -18,7 +19,7 @@ async function getById(id) {
 }
 
 async function create(param) {
-    if (await Company.findOne({username: param.companyPrefix})) {
+    if (await Company.findOne({companyPrefix: param.companyPrefix})) {
         throw 'Company "' + param.companyPrefix + '" is already taken';
     }
 
