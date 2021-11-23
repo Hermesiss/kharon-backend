@@ -40,27 +40,3 @@ function getCurrent(req, res, next) {
         .then(user => user ? res.json(user) : res.sendStatus(404))
         .catch(err => next(err));
 }
-
-/*function getById(req, res, next) {
-    service.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
-        .catch(err => next(err));
-}
-
-function update(req, res, next) {
-    service.update(req.params.id, req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}
-
-function _delete(req, res, next) {
-    service.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}
-
-function create(req, res, next) {
-    service.create(req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}*/

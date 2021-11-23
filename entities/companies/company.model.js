@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     companyName: {type: String, unique: true, required: true},
     companyPrefix: {type: String, unique: true, required: true},
-    apps: [{type: Schema.Types.ObjectId, ref: 'App', required: true, unique: false}],
+    apps: [{type: Schema.Types.ObjectId, ref: 'App', required: false, unique: false, default: []}],
 });
 
 schema.set('toJSON', {

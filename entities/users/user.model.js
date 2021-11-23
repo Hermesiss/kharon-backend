@@ -15,7 +15,7 @@ const schema = new Schema({
     lastName: {type: String, required: true},
     createdDate: {type: Date, default: Date.now},
     role: {type: UserRoles, default: UserRoles.User},
-    company: {type: Schema.Types.ObjectId, ref: 'Company'}
+    company: {type: Schema.Types.ObjectId, ref: 'Company', required: true}
 });
 
 schema.set('toJSON', {
