@@ -25,7 +25,7 @@ function checkUserCompany(req, res, next) {
             }
             userService.getById(req.params.id)
                 .then(targetUser => {
-                    if (callerUser && targetUser.company === callerUser.company)
+                    if (callerUser && targetUser.company.toString() === callerUser.company.toString())
                         return next()
                     return res.status(403).send("Cannot access users from different company");
                 })
@@ -42,7 +42,8 @@ function checkAppCompany(req, res, next) {
             }
             appService.getById(req.params.id)
                 .then(targetApp => {
-                    if (callerUser && targetApp.company === callerUser.company)
+                    console.log(targetApp.company === callerUser.company, targetApp.company , callerUser.company)
+                    if (callerUser && targetApp.company.toString() === callerUser.company.toString())
                         return next()
                     return res.status(403).send("Cannot access apps from different company");
                 })
@@ -58,8 +59,8 @@ function checkCompanyCompany(req, res, next) {
                 return next();
             }
             companyService.getById(req.params.id)
-                .then(targetApp => {
-                    if (callerUser && targetApp.company === callerUser.company)
+                .then(targetCompany => {
+                    if (callerUser && targetCompany.id === callerUser.company.toString())
                         return next()
                     return res.status(403).send("Cannot access different company");
                 })
