@@ -1,4 +1,5 @@
 const db = require('_helpers/db');
+const {semver} = require("nodemon/lib/utils");
 const {App, Company} = db;
 
 module.exports = {
@@ -10,6 +11,8 @@ module.exports = {
     addVersion, updateVersion, deleteVersion
 };
 
+const compareVersions = (a,b) => semver.rcompare(a.version, b.version)
+
 async function addVersion(id, param) {
     const app = await App.findById(id);
     console.log(app.versions)
@@ -18,6 +21,7 @@ async function addVersion(id, param) {
         throw 'Version "' + param.version + '" already exists';
     }
     app.versions.push(param)
+    app.versions = app.versions.sort(compareVersions)
     app.save()
 }
 
@@ -26,6 +30,7 @@ async function updateVersion(id, param) {
     const index = app.versions.findIndex(x => x.version === param.version);
     if (index >= 0) {
         app.versions[index] = param;
+        app.versions = app.versions.sort(compareVersions)
         app.save()
         return;
     }
@@ -117,7 +122,7 @@ async function update(id, param) {
 }
 
 async function _delete(id) {
-    const companies = await Company.find({"apps": { $elemMatch: { $eq: id}}})
+    const companies = await Company.find({"apps": {$elemMatch: {$eq: id}}})
     for (const company of companies) {
         await deleteAppFromCompany(company, id)
     }

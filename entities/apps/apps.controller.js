@@ -16,7 +16,7 @@ router.delete('/:id', checkRole(Roles.Admin), crud._delete);
 
 router.post('/:id/version', checkRole(Roles.Admin), addVersion);
 router.put('/:id/version', checkRole(Roles.Admin), updateVersion);
-router.delete('/:id/version', checkRole(Roles.Admin), deleteVersion);
+router.delete('/:id/version/:version', checkRole(Roles.Admin), deleteVersion);
 
 module.exports = router;
 
@@ -33,7 +33,7 @@ function updateVersion(req, res, next) {
 }
 
 function deleteVersion(req, res, next) {
-    service.deleteVersion(req.params.id, req.body)
+    service.deleteVersion(req.params.id, req.params)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
