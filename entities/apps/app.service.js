@@ -1,5 +1,5 @@
 const db = require('_helpers/db');
-const {semver} = require("semver");
+const semver = require("semver");
 const {App, Company} = db;
 
 module.exports = {
