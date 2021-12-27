@@ -27,9 +27,9 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     published: {type: Boolean, default: false},
-    appName: {type: String, unique: true, required: true},
+    appName: {type: String, unique: false, required: true},
     appCode: {type: String, unique: true, required: true},
-    rootPath: {type: String, unique: true, required: true},
+    rootPath: {type: String, unique: false, required: true},
     ftpHost: {type: String, required: true, default: 'ftp.myserver.com'},
     ftpPath: {type: String, required: true, default: '/path/to/app'},
     exePath: {type: String, required: true, default: 'app.exe'},
