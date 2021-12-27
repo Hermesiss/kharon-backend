@@ -54,8 +54,5 @@ schema.set('toJSON', {
 });
 
 module.exports = {
-    /**
-     * @type {Model<KharonApp>}
-     */
     App: mongoose.model('App', schema),
 };

@@ -2,20 +2,8 @@
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const {Roles} = require("./user.model");
-const {User, Company} = db;
+const {User} = db;
 
-module.exports = {
-    authenticate,
-    getAll,
-    getById,
-    create,
-    update,
-    delete: _delete,
-    getAllByCompany,
-    getByName,
-    changeCompany,
-    getPasswordHash
-};
 
 async function authenticate({username, password}) {
     username = processUsername(username);
@@ -93,11 +81,11 @@ async function update(id, param) {
     if (user.username !== param.username && await User.findOne({username: param.username})) {
         throw 'Username "' + param.username + '" is already taken';
     }
-
-    const company = await Company.getById(user.company)
+    const companyService = require('../companies/company.service')
+    const company = await companyService.getById(user.company)
 
     if (param.company && param.company !== user.company.toString()) {
-        const newCompany = await Company.getById(param.company)
+        const newCompany = await companyService.getById(param.company)
         if (!newCompany) {
             throw new Error(`Cannot find company ${param.company}`)
         }
@@ -113,14 +101,15 @@ async function update(id, param) {
     Object.assign(user, param);
 
     await user.save();
-}
+};
 
 async function changeCompany(id, companyId) {
+    const companyService = require('../companies/company.service')
     const user = await User.findById(id);
     if (user.role === Roles.Admin || user.role === Roles.Owner) {
         throw `Cannot change company for owners and admins`;
     }
-    const newCompany = await Company.getById(companyId)
+    const newCompany = await companyService.getById(companyId)
     if (user.company !== newCompany) {
         user.company = newCompany
     }
@@ -164,3 +153,16 @@ function changeUsernameCompany(username, newCompanyPrefix) {
     const splitted = splitUsername(username)
     return `${newCompanyPrefix}@${splitted[1]}`
 }
+
+module.exports = {
+    authenticate,
+    getAll,
+    getById,
+    create,
+    update,
+    delete: _delete,
+    getAllByCompany,
+    getByName,
+    changeCompany,
+    getPasswordHash
+};

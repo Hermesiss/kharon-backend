@@ -45,9 +45,6 @@ schema.set('toJSON', {
 });
 
 module.exports = {
-    /**
-     * @type {Model<KharonUser>}
-     */
     User: mongoose.model('User', schema),
     Roles: UserRoles
 };

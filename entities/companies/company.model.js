@@ -24,8 +24,5 @@ schema.set('toJSON', {
 });
 
 module.exports = {
-    /**
-     * @type {Model<KharonCompany>}
-     */
     Company: mongoose.model('Company', schema),
 };
