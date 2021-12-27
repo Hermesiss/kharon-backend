@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const {Roles} = require("./user.model");
-const {User} = db;
+const {User, Company} = db;
 
 
 async function authenticate({username, password}) {
