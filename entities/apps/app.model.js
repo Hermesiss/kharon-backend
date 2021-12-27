@@ -2,6 +2,29 @@ const mongoose = require('mongoose');
 const {SemverType} = require("../../_helpers/semver");
 const Schema = mongoose.Schema;
 
+/** @typedef {object} KharonVersion
+ * @property {string} version
+ * @property {string} date
+ * @property {string} _id
+ * @property {string} changes
+ */
+
+/** @typedef {object} KharonApp
+ * @property {boolean} published
+ * @property {string} ftpHost
+ * @property {string} ftpPath
+ * @property {string} exePath
+ * @property {string} exeParams
+ * @property {Array<string>} ignoredFiles
+ * @property {Array<string>} ignoredExtensions
+ * @property {string} appCode
+ * @property {string} appName
+ * @property {string} company
+ * @property {string} rootPath
+ * @property {string} createdDate
+ * @property {Array<KharonVersion>} versions
+ */
+
 const schema = new Schema({
     published: {type: Boolean, default: false},
     appName: {type: String, unique: true, required: true},
@@ -31,5 +54,8 @@ schema.set('toJSON', {
 });
 
 module.exports = {
+    /**
+     * @type {Model<KharonApp>}
+     */
     App: mongoose.model('App', schema),
 };

@@ -3,6 +3,11 @@ const userService = require("../entities/users/user.service");
 const appService = require("../entities/apps/app.service");
 const companyService = require("../entities/companies/company.service");
 
+/**
+ * In current user can call this API
+ * @param {UserRoles} userRole - Minimum user role
+ * @return {(function(*, *, *): void)|*}
+ */
 function checkRole(userRole) {
     const getRoleIndex = role => Object.values(Roles).indexOf(role);
     return (req, res, next) => {

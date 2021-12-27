@@ -1,6 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/**
+ * @typedef {Object} KharonUser
+ * @property {string} username
+ * @property {string} hash
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {Date} createdDate
+ * @property {UserRoles} role
+ * @property {ObjectId} company
+ * @property {Array<ObjectId>} apps
+ */
+
+/**
+ *
+ * @enum {String}
+ */
 const UserRoles = {
     None: "none",
     User: "user",
@@ -15,7 +31,8 @@ const schema = new Schema({
     lastName: {type: String, required: true},
     createdDate: {type: Date, default: Date.now},
     role: {type: UserRoles, default: UserRoles.User},
-    company: {type: Schema.Types.ObjectId, ref: 'Company', required: true}
+    company: {type: Schema.Types.ObjectId, ref: 'Company', required: true},
+    apps: [{type: Schema.Types.ObjectId, ref: 'App', required: false, unique: false, default: []}],
 });
 
 schema.set('toJSON', {
@@ -28,6 +45,9 @@ schema.set('toJSON', {
 });
 
 module.exports = {
+    /**
+     * @type {Model<KharonUser>}
+     */
     User: mongoose.model('User', schema),
     Roles: UserRoles
 };

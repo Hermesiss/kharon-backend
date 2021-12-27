@@ -11,8 +11,20 @@ module.exports = {
     addVersion, updateVersion, deleteVersion
 };
 
+/**
+ *
+ * @param {String} a
+ * @param {String} b
+ * @return {number|*}
+ */
 const compareVersions = (a,b) => semver.rcompare(a.version, b.version)
 
+/**
+ *
+ * @param {String} id
+ * @param {KharonVersion} param
+ * @return {Promise<void>}
+ */
 async function addVersion(id, param) {
     const app = await App.findById(id);
     console.log(app.versions)
@@ -25,6 +37,12 @@ async function addVersion(id, param) {
     app.save()
 }
 
+/**
+ *
+ * @param {String} id
+ * @param {KharonVersion} param
+ * @return {Promise<void>}
+ */
 async function updateVersion(id, param) {
     const app = await App.findById(id);
     const index = app.versions.findIndex(x => x.version === param.version);
@@ -38,6 +56,12 @@ async function updateVersion(id, param) {
     throw 'Version "' + param.version + '" not found';
 }
 
+/**
+ *
+ * @param {String} id
+ * @param {KharonVersion} param
+ * @return {Promise<void>}
+ */
 async function deleteVersion(id, param) {
     const app = await App.findById(id);
     const index = app.versions.findIndex(x => x.version === param.version);
@@ -50,6 +74,10 @@ async function deleteVersion(id, param) {
     throw 'Version "' + param.version + '" not found';
 }
 
+/**
+ *
+ * @return {Promise<Array<KharonApp>>}
+ */
 async function getAll() {
     return await App.find();
 }
@@ -58,8 +86,13 @@ async function getById(id) {
     return await App.findById(id);
 }
 
+/**
+ *
+ * @param {KharonApp} param
+ * @return {Promise<void>}
+ */
 async function create(param) {
-    if (await App.findOne({username: param.appCode})) {
+    if (await App.findOne({appCode: param.appCode})) {
         throw 'App "' + param.appCode + '" is already taken';
     }
 
@@ -74,6 +107,12 @@ async function create(param) {
     await company.save()
 }
 
+/**
+ *
+ * @param {KharonCompany} company
+ * @param id
+ * @return {Promise<void>}
+ */
 async function deleteAppFromCompany(company, id) {
     const index = company.apps.findIndex(x => x.toString() === id);
 
