@@ -1,5 +1,7 @@
 const db = require('_helpers/db');
 const semver = require("semver");
+const {CustomError, ErrorType} = require("../../_helpers/error-handler");
+const {version} = require("nodemon/lib/utils");
 const {App, Company} = db;
 
 module.exports = {
@@ -17,7 +19,7 @@ module.exports = {
  * @param {String} b
  * @return {number|*}
  */
-const compareVersions = (a,b) => semver.rcompare(a.version, b.version)
+const compareVersions = (a, b) => semver.rcompare(a.version, b.version)
 
 /**
  *
@@ -30,7 +32,7 @@ async function addVersion(id, param) {
     console.log(app.versions)
     console.log(param)
     if (app.versions.some(x => x.version === param.version)) {
-        throw 'Version "' + param.version + '" already exists';
+        throw new CustomError('Version "' + param.version + '" already exists', ErrorType.VersionExists, param.version);
     }
     app.versions.push(param)
     app.versions = app.versions.sort(compareVersions)
@@ -53,7 +55,7 @@ async function updateVersion(id, param) {
         return;
     }
 
-    throw 'Version "' + param.version + '" not found';
+    throw new CustomError('Version "' + param.version + '" not found', ErrorType.VersionNotFound, param.version, 404);
 }
 
 /**
@@ -71,7 +73,7 @@ async function deleteVersion(id, param) {
         return;
     }
 
-    throw 'Version "' + param.version + '" not found';
+    throw new CustomError('Version "' + param.version + '" not found', ErrorType.VersionNotFound, param.version, 404);
 }
 
 /**
@@ -93,7 +95,7 @@ async function getById(id) {
  */
 async function create(param) {
     if (await App.findOne({appCode: param.appCode})) {
-        throw 'App "' + param.appCode + '" is already taken';
+        throw new CustomError('App "' + param.appCode + '" is already taken', ErrorType.AppCodeExists, param.appCode)
     }
 
     const company = await Company.findById(param.company)
@@ -125,10 +127,10 @@ async function deleteAppFromCompany(company, id) {
 async function update(id, param) {
     const app = await App.findById(id);
 
-    if (!app) throw 'App not found';
+    if (!app) throw new CustomError('App not found', ErrorType.AppNotFound, id, 404);
 
     if (app.appCode !== param.appCode && await App.findOne({appCode: param.appCode})) {
-        throw 'App with code "' + param.appCode + '" is already taken';
+        throw new CustomError('App "' + param.appCode + '" is already taken', ErrorType.AppCodeExists, param.appCode);
     }
 
     if (param.company && app.company.toString() !== param.company) {
@@ -141,7 +143,7 @@ async function update(id, param) {
         const newCompany = await Company.findById(param.company)
 
         if (!newCompany) {
-            throw `Cannot find company ${param.company}`;
+            throw new CustomError(`Cannot find company ${param.company}`, ErrorType.CompanyNotFound, param.company, 422);
         }
 
         if (newCompany.apps.indexOf(app.id) === -1) {

@@ -1,5 +1,6 @@
 const semver = require('semver');
 const mongoose = require('mongoose');
+const {CustomError, ErrorType} = require("./error-handler");
 
 class SemverType extends mongoose.SchemaType {
     constructor(key, options) {
@@ -8,7 +9,7 @@ class SemverType extends mongoose.SchemaType {
 
     cast(val) {
         if (!semver.valid(val)) {
-            throw new Error('Semver: ' + val + ' is not a valid semver');
+            throw new CustomError('Semver: ' + val + ' is not a valid semver', ErrorType.SemverInvalid, val);
         }
 
         return semver.clean(val);

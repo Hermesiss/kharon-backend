@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const {Roles} = require("./user.model");
+const {CustomError, ErrorType} = require("../../_helpers/error-handler");
 const {User, Company} = db;
 
 
@@ -36,7 +37,10 @@ async function getByName(username) {
 
 function checkUsernameCompany(username, companyPrefix) {
     if (splitUsername(username)[0] !== companyPrefix) {
-        throw new Error(`User company ${companyPrefix} doesn't correspond to username ${username}`)
+        throw new CustomError(`User company ${companyPrefix} doesn't correspond to username ${username}`, ErrorType.CompanyUsernameMismatch, {
+            companyPrefix,
+            username
+        }, 422)
     }
 }
 
@@ -44,12 +48,12 @@ async function create(param) {
     param.username = checkUsername(param)
 
     if (await User.findOne({username: param.username})) {
-        throw 'Username "' + param.username + '" is already taken';
+        throw new CustomError('Username "' + param.username + '" is already taken', ErrorType.UserUsernameExists, param.username);
     }
 
     const company = await Company.findById(param.company)
     if (!company) {
-        throw new Error(`Cannot find company ${param.company}`)
+        throw new CustomError(`Cannot find company ${param.company}`, ErrorType.CompanyNotFound, param.company, 422);
     }
     checkUsernameCompany(param.username, company.companyPrefix);
 
@@ -69,17 +73,17 @@ function getPasswordHash(password) {
 async function update(id, param) {
     const user = await User.findById(id);
 
-    if (!user) throw 'User not found';
+    if (!user) throw new CustomError('User not found', ErrorType.UserNotFound, id, 404);
     if (param.username) {
         param.username = checkUsername(param)
     }
 
     if (user.role === Roles.Admin || user.role === Roles.Owner && param.username !== user.username) {
-        throw `Owners and admins cannot change their username`;
+        throw new CustomError(`Owners and admins cannot change their username`, ErrorType.UserAdminOwnerUsername);
     }
 
     if (user.username !== param.username && await User.findOne({username: param.username})) {
-        throw 'Username "' + param.username + '" is already taken';
+        throw new CustomError('Username "' + param.username + '" is already taken', ErrorType.UserUsernameExists, param.username);
     }
     const companyService = require('../companies/company.service')
     const company = await companyService.getById(user.company)
@@ -87,7 +91,7 @@ async function update(id, param) {
     if (param.company && param.company !== user.company.toString()) {
         const newCompany = await companyService.getById(param.company)
         if (!newCompany) {
-            throw new Error(`Cannot find company ${param.company}`)
+            throw new CustomError('Company "' + param.companyPrefix + '" is already taken', ErrorType.CompanyPrefixExists, param.companyPrefix);
         }
         param.username = changeUsernameCompany(user.username, newCompany.companyPrefix)
     } else if (param.username && param.username !== user.username) {
@@ -107,7 +111,7 @@ async function changeCompany(id, companyId) {
     const companyService = require('../companies/company.service')
     const user = await User.findById(id);
     if (user.role === Roles.Admin || user.role === Roles.Owner) {
-        throw `Cannot change company for owners and admins`;
+        throw new CustomError(`Cannot change company for owners and admins`, ErrorType.UserAdminOwnerCompany)
     }
     const newCompany = await companyService.getById(companyId)
     if (user.company !== newCompany) {
@@ -134,7 +138,7 @@ function checkUsername(user) {
     if (user.role === Roles.User) {
         const splitted = splitUsername(username)
         if (splitted.length !== 2) {
-            throw new Error(`Wrong username, must be [company-prefix@username], but received ${username}`)
+            throw new CustomError(`Wrong username, must be [company-prefix@username], but received ${username}`, ErrorType.UserUsernameWrongFormat, username)
         }
     }
     return processUsername(username)
@@ -143,7 +147,7 @@ function checkUsername(user) {
 function splitUsername(username) {
     const splitted = username.split('@')
     if (splitted.length > 2) {
-        throw new Error(`Wrong username, must be [company-prefix@username], but received ${username}`)
+        throw new CustomError(`Wrong username, must be [company-prefix@username], but received ${username}`, ErrorType.UserUsernameWrongFormat, username)
     }
     return splitted
 }

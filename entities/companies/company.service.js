@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const {Roles} = require("../users/user.model");
 const {getPasswordHash} = require("../users/user.service");
+const {CustomError, ErrorType} = require("../../_helpers/error-handler");
 
 
 async function getAll() {
@@ -31,7 +32,7 @@ async function ensureManager(company) {
 
 async function create(param) {
     if (await Company.findOne({companyPrefix: param.companyPrefix})) {
-        throw 'Company "' + param.companyPrefix + '" is already taken';
+        throw new CustomError('Company "' + param.companyPrefix + '" is already taken', ErrorType.CompanyPrefixExists, param.companyPrefix);
     }
 
     const company = new Company(param);
@@ -43,11 +44,11 @@ async function create(param) {
 async function update(id, param) {
     const company = await Company.findById(id);
 
-    if (!company) throw 'Company not found';
+    if (!company) throw new CustomError(`Cannot find company ${param.company}`, ErrorType.CompanyNotFound, id, 404);
     if (company.companyPrefix !== param.companyPrefix) {
         const userService = require('../users/user.service')
         if (await Company.findOne({companyPrefix: param.companyPrefix})) {
-            throw 'Company prefix "' + param.companyPrefix + '" is already taken';
+            throw new CustomError('Company "' + param.companyPrefix + '" is already taken', ErrorType.CompanyPrefixExists, param.companyPrefix);
         }
         const companyUsers = await userService.getAllByCompany(company.id)
         for (const companyUser of companyUsers) {
