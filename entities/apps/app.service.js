@@ -1,7 +1,6 @@
 const db = require('_helpers/db');
 const semver = require("semver");
 const {CustomError, ErrorType} = require("../../_helpers/error-handler");
-const {version} = require("nodemon/lib/utils");
 const {App, Company} = db;
 
 module.exports = {
