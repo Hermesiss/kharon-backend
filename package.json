@@ -22,7 +22,9 @@
         "mongodb": "^3.5.9",
         "mongoose": "^5.9.21",
         "rootpath": "^0.1.2",
-        "semver": "^7.3.5"
+        "semver": "^7.3.5",
+        "swagger-jsdoc": "^6.2.1",
+        "swagger-ui-express": "^4.3.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"
