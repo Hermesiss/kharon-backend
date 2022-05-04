@@ -7,11 +7,12 @@ require("dotenv").config();
 
 function jwt() {
     const secret = process.env.JWT_SECRET;
-    return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
+    return expressJwt({secret, algorithms: ['HS256'], isRevoked}).unless({
         path: [
             // public routes that don't require authentication
             '/users/authenticate',
-            '/users/register'
+            '/users/register',
+            {url: /^\/api-docs.*/, methods: ['GET']},
         ]
     });
 }
