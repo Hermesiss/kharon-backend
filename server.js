@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('_helpers/jwt');
-const { errorHandler } = require('_helpers/error-handler');
+const {errorHandler} = require('_helpers/error-handler');
 
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
@@ -19,7 +19,12 @@ const swaggerOptions = {
         }
     },
     // ['.routes/*.js']
-    apis: ["server.js", "./entities/users/users.controller.js", "./entities/apps/apps.controller.js", "./entities/companies/companies.controller.js" ]
+    apis: ["server.js",
+        "./entities/users/users.controller.js",
+        "./entities/apps/apps.controller.js",
+        "./entities/companies/companies.controller.js",
+        "./entities/hostings/hosting.controller.js"
+    ]
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -27,7 +32,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 require("dotenv").config();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -38,17 +43,17 @@ if (process.env.FTP_ENABLED === 'true') {
     require('_helpers/ftp')();
     const serveIndex = require('serve-index');
     let ftpDir = '/ftp/';
-    app.use('/ftp', express.static(ftpDir), serveIndex(ftpDir, { icons: true }));
+    app.use('/ftp', express.static(ftpDir), serveIndex(ftpDir, {icons: true}));
 }
 
 // api routes
 
 /**
-  * @swagger
-  * tags:
-  *   name: Main
-  *   description: Main
-  */
+ * @swagger
+ * tags:
+ *   name: Main
+ *   description: Main
+ */
 /**
  * @swagger
  * /users:
@@ -87,6 +92,8 @@ app.use('/companies', require('./entities/companies/companies.controller'));
  */
 app.use('/apps', require('./entities/apps/apps.controller'));
 
+app.use('/hostings', require('./entities/hostings/hosting.controller'));
+
 /**
  * @swagger
  * /api-docs:
@@ -107,6 +114,6 @@ app.use(errorHandler);
 // start server
 const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 8080;
 const ip = process.env.NODE_ENV === 'production' ? '0.0.0.0' : process.env.IP;
-const server = app.listen(port, ip,function () {
+const server = app.listen(port, ip, function () {
     console.log('Server listening on port ' + port);
 });

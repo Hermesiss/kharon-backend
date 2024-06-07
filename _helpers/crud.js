@@ -11,7 +11,7 @@ class CrudController {
 
     create = (req, res, next) => {
         this.service.create(req.body)
-            .then(() => res.json({}))
+            .then((obj) => res.json(obj))
             .catch(err => next(err));
     };
 
@@ -23,13 +23,13 @@ class CrudController {
 
     update = (req, res, next) => {
         this.service.update(req.params.id, req.body)
-            .then(() => res.json({}))
+            .then((obj) => res.json(obj))
             .catch(err => next(err));
     };
 
     _delete = (req, res, next) => {
         this.service.delete(req.params.id)
-            .then(() => res.json({}))
+            .then((obj) => res.json(obj))
             .catch(err => next(err));
     };
 }

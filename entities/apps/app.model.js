@@ -13,14 +13,14 @@ const Schema = mongoose.Schema;
  * @property {boolean} published
  * @property {string} ftpHost
  * @property {string} ftpPath
+ * @property {string} rootPath
  * @property {string} exePath
  * @property {string} exeParams
  * @property {Array<string>} ignoredFiles
  * @property {Array<string>} ignoredExtensions
  * @property {string} appCode
  * @property {string} appName
- * @property {string} company
- * @property {string} rootPath
+ * @property {ObjectId} company
  * @property {string} createdDate
  * @property {Array<KharonVersion>} versions
  */

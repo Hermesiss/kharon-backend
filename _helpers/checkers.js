@@ -2,6 +2,7 @@ const {Roles} = require("../entities/users/user.model");
 const userService = require("../entities/users/user.service");
 const appService = require("../entities/apps/app.service");
 const companyService = require("../entities/companies/company.service");
+const hostingService = require("../entities/hostings/hosting.service");
 
 /**
  * In current user can call this API
@@ -57,6 +58,23 @@ function checkAppCompany(req, res, next) {
         .catch(err => next(err));
 }
 
+function checkHostingCompany(req, res, next) {
+    userService.getById(req.user.sub)
+        .then(callerUser => {
+            if (callerUser && callerUser.role === Roles.Admin) {
+                return next();
+            }
+            hostingService.getById(req.params.id)
+                .then(targetHosting => {
+                    if (callerUser && targetHosting.company.toString() === callerUser.company.toString())
+                        return next()
+                    return res.status(403).send("Cannot access hostings from different company");
+                })
+                .catch(err => next(err));
+        })
+        .catch(err => next(err));
+}
+
 function checkCompanyCompany(req, res, next) {
     userService.getById(req.user.sub)
         .then(callerUser => {
@@ -74,4 +92,4 @@ function checkCompanyCompany(req, res, next) {
         .catch(err => next(err));
 }
 
-module.exports = {checkRole, checkUserCompany, checkAppCompany, checkCompanyCompany};
+module.exports = {checkRole, checkUserCompany, checkAppCompany, checkCompanyCompany, checkHostingCompany};

@@ -18,18 +18,37 @@ async function authenticate({username, password}) {
     }
 }
 
+/**
+ *
+ * @return {Promise<Array<KharonUser>>}
+ */
 async function getAll() {
     return await User.find();
 }
 
+/**
+ *
+ * @param company
+ * @return {Promise<Array<KharonUser>>}
+ */
 async function getAllByCompany(company) {
     return await User.find({company: company});
 }
 
+/**
+ *
+ * @param id
+ * @return {Promise<KharonUser>}
+ */
 async function getById(id) {
     return await User.findById(id);
 }
 
+/**
+ *
+ * @param username
+ * @return {Promise<KharonUser>}
+ */
 async function getByName(username) {
     username = processUsername(username);
     return await User.findOne({username});
@@ -64,6 +83,7 @@ async function create(param) {
     }
 
     await user.save();
+    return user;
 }
 
 function getPasswordHash(password) {
@@ -105,6 +125,7 @@ async function update(id, param) {
     Object.assign(user, param);
 
     await user.save();
+    return user;
 };
 
 async function changeCompany(id, companyId) {
@@ -123,7 +144,7 @@ async function changeCompany(id, companyId) {
 }
 
 async function _delete(id) {
-    await User.findByIdAndRemove(id);
+    return await User.findByIdAndRemove(id);
 }
 
 function processUsername(username) {

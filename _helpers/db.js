@@ -9,7 +9,8 @@ mongoose.Promise = global.Promise;
 module.exports = {
     User: require('../entities/users/user.model').User,
     App: require('../entities/apps/app.model').App,
-    Company: require('../entities/companies/company.model').Company
+    Company: require('../entities/companies/company.model').Company,
+    Hosting: require('../entities/hostings/hosting.model').Hosting,
 };
 
 

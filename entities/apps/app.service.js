@@ -36,6 +36,7 @@ async function addVersion(id, param) {
     app.versions.push(param)
     app.versions = app.versions.sort(compareVersions)
     app.save()
+    return app;
 }
 
 /**
@@ -51,7 +52,7 @@ async function updateVersion(id, param) {
         app.versions[index] = param;
         app.versions = app.versions.sort(compareVersions)
         app.save()
-        return;
+        return app;
     }
 
     throw new CustomError('Version "' + param.version + '" not found', ErrorType.VersionNotFound, param.version, 404);
@@ -69,7 +70,7 @@ async function deleteVersion(id, param) {
     if (index >= 0) {
         app.versions.splice(index, 1);
         app.save()
-        return;
+        return app;
     }
 
     throw new CustomError('Version "' + param.version + '" not found', ErrorType.VersionNotFound, param.version, 404);
@@ -83,6 +84,11 @@ async function getAll() {
     return await App.find();
 }
 
+/**
+ *
+ * @param id
+ * @return {Promise<KharonApp>}
+ */
 async function getById(id) {
     return await App.findById(id);
 }
@@ -106,6 +112,7 @@ async function create(param) {
     company.apps.push(app)
 
     await company.save()
+    return app;
 }
 
 /**
@@ -159,6 +166,7 @@ async function update(id, param) {
     Object.assign(app, param);
 
     await app.save();
+    return app;
 }
 
 async function _delete(id) {
@@ -167,5 +175,5 @@ async function _delete(id) {
         await deleteAppFromCompany(company, id)
     }
 
-    await App.findByIdAndRemove(id);
+    return await App.findByIdAndRemove(id);
 }

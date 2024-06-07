@@ -39,6 +39,7 @@ async function create(param) {
     await company.save();
 
     await ensureManager(company)
+    return company;
 }
 
 async function update(id, param) {
@@ -64,10 +65,11 @@ async function update(id, param) {
     Object.assign(company, param);
 
     await company.save();
+    return company;
 }
 
 async function _delete(id) {
-    await Company.findByIdAndRemove(id);
+    return await Company.findByIdAndRemove(id);
 }
 
 async function ensureAdmin() {
