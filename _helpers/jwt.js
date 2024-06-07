@@ -12,6 +12,8 @@ function jwt() {
             // public routes that don't require authentication
             '/users/authenticate',
             '/users/register',
+            'favicon.ico',
+            {url: /^\/ftp.*/},
             {url: /^\/api-docs.*/, methods: ['GET']},
         ]
     });

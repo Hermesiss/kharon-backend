@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const jwt = require('_helpers/jwt');
 const { errorHandler } = require('_helpers/error-handler');
 
-const swaggerJsDoc = require('swagger-jsdoc'); 
+const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 //https://swagger.io/specification/#infoObject
 const swaggerOptions = {
@@ -34,19 +34,26 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt());
 
+if (process.env.FTP_ENABLED === 'true') {
+    require('_helpers/ftp')();
+    const serveIndex = require('serve-index');
+    let ftpDir = '/ftp/';
+    app.use('/ftp', express.static(ftpDir), serveIndex(ftpDir, { icons: true }));
+}
+
 // api routes
 
 /**
   * @swagger
   * tags:
   *   name: Main
-  *   description: Main 
+  *   description: Main
   */
 /**
  * @swagger
  * /users:
  *  get:
- *    tags: 
+ *    tags:
  *      - Main
  *    description: Use to request all users
  *    responses:
@@ -59,7 +66,7 @@ app.use('/users', require('./entities/users/users.controller'));
  * @swagger
  * /companies:
  *  get:
- *    tags: 
+ *    tags:
  *      - Main
  *    description: Use to request all companies
  *    responses:
@@ -71,7 +78,7 @@ app.use('/companies', require('./entities/companies/companies.controller'));
  * @swagger
  * /apps:
  *  get:
- *    tags: 
+ *    tags:
  *      - Main
  *    description: Use to request all apps
  *    responses:
@@ -84,7 +91,7 @@ app.use('/apps', require('./entities/apps/apps.controller'));
  * @swagger
  * /api-docs:
  *  get:
- *    tags: 
+ *    tags:
  *      - Main
  *    description: Api information
  *    responses:
