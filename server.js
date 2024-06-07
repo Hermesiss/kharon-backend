@@ -65,7 +65,7 @@ if (process.env.FTP_ENABLED === 'true') {
  *      '200':
  *        description: A successful response
  */
-app.use('/users', require('./entities/users/users.controller'));
+app.use('/api/users', require('./entities/users/users.controller'));
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ app.use('/users', require('./entities/users/users.controller'));
  *      '200':
  *        description: A successful response
  */
-app.use('/companies', require('./entities/companies/companies.controller'));
+app.use('/api/companies', require('./entities/companies/companies.controller'));
 /**
  * @swagger
  * /apps:
@@ -90,9 +90,9 @@ app.use('/companies', require('./entities/companies/companies.controller'));
  *      '200':
  *        description: A successful response
  */
-app.use('/apps', require('./entities/apps/apps.controller'));
+app.use('/api/apps', require('./entities/apps/apps.controller'));
 
-app.use('/hostings', require('./entities/hostings/hosting.controller'));
+app.use('/api/hostings', require('./entities/hostings/hosting.controller'));
 
 /**
  * @swagger
