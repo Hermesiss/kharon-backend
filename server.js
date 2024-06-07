@@ -46,6 +46,10 @@ if (process.env.FTP_ENABLED === 'true') {
     app.use('/ftp', express.static(ftpDir), serveIndex(ftpDir, {icons: true}));
 }
 
+if (process.env.MONGO_HOST_ENABLED === 'true') {
+    require('_helpers/mongo-hosting')();
+}
+
 // api routes
 
 /**
