@@ -9,7 +9,8 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    addVersion, updateVersion, deleteVersion
+    addVersion, updateVersion, deleteVersion,
+    getByCode
 };
 
 /**
@@ -176,4 +177,10 @@ async function _delete(id) {
     }
 
     return await App.findByIdAndRemove(id);
+}
+
+async function getByCode(code) {
+    const app = await App.findOne({ appCode: code });
+    if (!app) throw new CustomError('App not found', ErrorType.AppNotFound, code, 404);
+    return app;
 }

@@ -18,10 +18,10 @@ const crud = new BasicCrud(service)
 * @swagger
 * /create:
 *  post:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Create Apps
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -33,10 +33,10 @@ router.post('/create', checkRole(Roles.Admin), crud.create);
 * @swagger
 * /:
 *  get:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Get all Apps
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -44,14 +44,15 @@ router.post('/create', checkRole(Roles.Admin), crud.create);
 *        description: Username or password is incorrect
 */
 router.get('/', checkRole(Roles.Admin), crud.getAll);
+router.get('/appcode/:code', checkAppCompany, getByCode);
 /**
 * @swagger
 * /:id:
 *  get:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Check App
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -63,10 +64,10 @@ router.get('/:id', checkAppCompany, crud.getById);
 * @swagger
 * /:id:
 *  put:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Add App
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -78,10 +79,10 @@ router.put('/:id', checkRole(Roles.Admin), crud.update);
 * @swagger
 * /:id:
 *  delete:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Delete App
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -93,10 +94,10 @@ router.delete('/:id', checkRole(Roles.Admin), crud._delete);
 * @swagger
 * /:id/version:
 *  post:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Add App version
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -108,10 +109,10 @@ router.post('/:id/version', checkRole(Roles.Admin), addVersion);
 * @swagger
 * /:id/version:
 *  put:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Update App version
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -123,10 +124,10 @@ router.put('/:id/version', checkRole(Roles.Admin), updateVersion);
 * @swagger
 * /:id/version/:version:
 *  delete:
-*    tags: 
+*    tags:
 *      - Apps
 *    description: Delete App version
-*    variables: 
+*    variables:
 *    responses:
 *      '200':
 *        description: A successful response
@@ -136,6 +137,12 @@ router.put('/:id/version', checkRole(Roles.Admin), updateVersion);
 router.delete('/:id/version/:version', checkRole(Roles.Admin), deleteVersion);
 
 module.exports = router;
+
+function getByCode(req, res, next) {
+    service.getByCode(req.params.code)
+        .then(app => res.json(app))
+        .catch(err => next(err));
+}
 
 function addVersion(req, res, next) {
     service.addVersion(req.params.id, req.body)
