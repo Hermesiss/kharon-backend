@@ -98,7 +98,7 @@ app.use('/api/apps', require('./entities/apps/apps.controller'));
 
 app.use('/api/hostings', require('./entities/hostings/hosting.controller'));
 
-app.use('/api/remote', require('./entities/remote'));
+app.use('/api/remote', require('./entities/remote/remote.controller'));
 
 /**
  * @swagger
