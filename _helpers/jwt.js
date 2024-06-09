@@ -15,6 +15,7 @@ function jwt() {
             '/api/computer',
             '/favicon.ico',
             {url: /^\/ftp.*/},
+            {url: /^\/api\/remote.*/},
             {url: /^\/api-docs.*/, methods: ['GET']},
         ]
     });

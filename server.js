@@ -98,12 +98,7 @@ app.use('/api/apps', require('./entities/apps/apps.controller'));
 
 app.use('/api/hostings', require('./entities/hostings/hosting.controller'));
 
-
-app.use('/api/computer', (req, res) => {
-    const {computerName, port, systemUUID} = req.body;
-    console.log('Computer registered', computerName, port, systemUUID);
-    res.send('Computer registered');
-});
+app.use('/api/remote', require('./entities/remote'));
 
 /**
  * @swagger
