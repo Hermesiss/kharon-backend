@@ -113,6 +113,12 @@ app.use('/api/remote', require('./entities/remote/remote.controller'));
  */
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+app.use('/', require('./entities/web/web.controller'));
+
 
 // global error handler
 app.use(errorHandler);

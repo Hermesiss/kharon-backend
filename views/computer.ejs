@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications on <%= computer.computerName %></title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <a href="/" class="btn btn-secondary mb-3">Back</a>
+    <h2>Computer: <%= computer.computerName %></h2>
+    <div><strong>IP:</strong> <%= computer.ip %> <strong>Port:</strong> <%= computer.port %> <strong>Last
+            online:</strong> <%= computer.lastUpdate %></div>
+    <hr>
+    <h3>Apps:</h3>
+    <% apps.forEach(function(app) { %>
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5 class="card-title"><%= app.appName %> (<%= app.appCode %>)</h5>
+                <button onclick="manageApp('<%= computer.systemUUID %>', '<%= app.appCode %>', 'launch')"
+                        class="btn btn-success">Launch
+                </button>
+                <button onclick="manageApp('<%= computer.systemUUID %>', '<%= app.appCode %>', 'close')"
+                        class="btn btn-danger">Close
+                </button>
+            </div>
+        </div>
+    <% }); %>
+</div>
+
+<script>
+    function manageApp(computerId, appId, action) {
+        $.ajax({
+            url: `/api/remote/computers/${computerId}/app-${action}`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({appId: appId}),
+            success: function (response) {
+                console.log(response);
+            },
+            error: function () {
+                console.error('Error');
+            }
+        });
+    }
+</script>
+</body>
+</html>

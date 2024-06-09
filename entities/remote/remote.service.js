@@ -42,6 +42,18 @@ function getComputer(systemUUID) {
     return computer;
 }
 
+/**
+ * @typedef {object} AppList
+ * @property {string} appCode
+ * @property {string} installed
+ * @property {string} version
+ */
+
+/**
+ *
+ * @param systemUUID
+ * @return {Promise<AppList[]>}
+ */
 async function getAppList(systemUUID) {
     const computer = computers.get(systemUUID);
     if (!computer) {
@@ -50,7 +62,7 @@ async function getAppList(systemUUID) {
     const url = `${getUrl(computer)}/api/app-list`;
     try {
         const response = await axios.get(url);
-        return response.data;
+        return response.data.configs;
     } catch (e) {
         console.error(e);
         throw new Error(`Error getting app list: ${e}`);

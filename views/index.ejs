@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .grid-button {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+        }
+
+        .info-text {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <% if (computers.length === 0) { %>
+            <p>No computers found</p>
+        <% } else { %>
+            <% computers.forEach(function(register) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="/web/<%= register.systemUUID %>" class="grid-button text-dark text-decoration-none">
+                                <h5 class="card-title"><%= register.computerName %></h5>
+                                <p class="info-text">IP: <%= register.ip %></p>
+                                <p class="info-text">Port: <%= register.port %></p>
+                                <p class="info-text">Last Online: <%= register.lastUpdate.toISOString() %></p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
