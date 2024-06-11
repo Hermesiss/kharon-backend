@@ -21,7 +21,6 @@ router.get('/web/:id', async (req, res) => {
             }
         }
 
-        console.log(apps);
         res.render('computer', {computer, apps});
     } catch (e) {
         console.error(e);

@@ -8,6 +8,8 @@ const {errorHandler} = require('_helpers/error-handler');
 
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
+const {join} = require("node:path");
+const serveIndex = require("serve-index");
 //https://swagger.io/specification/#infoObject
 const swaggerOptions = {
     swaggerDefinition: {
@@ -40,9 +42,16 @@ app.use(cors());
 app.use(jwt());
 
 if (process.env.FTP_ENABLED === 'true') {
-    require('_helpers/ftp')();
+    const ftp = require('_helpers/ftp');
+    ftp.startFtpServer()
     const serveIndex = require('serve-index');
     let ftpDir = '/ftp/';
+    app.use('/ftp/tree/:dir', (req, res) => {
+        let dir = decodeURIComponent(req.params.dir);
+        if (dir === 'root') dir = '';
+        const absDir = join(ftpDir, dir);
+        res.json(ftp.getFileTree(absDir))
+    })
     app.use('/ftp', express.static(ftpDir), serveIndex(ftpDir, {icons: true}));
 }
 
