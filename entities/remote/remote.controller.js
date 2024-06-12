@@ -29,7 +29,12 @@ router.post('/register', (req, res) => {
 
 router.get('/computers', (req, res) => {
     const systemUUIDs = service.getComputers();
-    res.json(systemUUIDs);
+    const configs = systemUUIDs.map(uuid => {
+        return {
+            uuid,
+            name: service.getComputer(uuid).computerName};
+    });
+    res.json({configs});
 })
 
 router.get('/computers/:id', (req, res) => {
@@ -73,9 +78,16 @@ router.post('/computers/:id/app-close', async (req, res) => {
     }
 })
 
-router.all('/computers/:id/relay/:command', async (req, res) => {
+router.all('/computers/:id/relay', async (req, res) => {
     try {
-        const response = await service.relayCommand(req.params.id, req.params.command, req.method, req.body);
+        const id = req.params.id;
+        const port = req.query.port;
+        const command = req.query.command;
+
+        if (!command) {
+            return res.status(400).send('Missing required query parameter: command');
+        }
+        const response = await service.relayCommand(id, command, req.method, port, req.body);
         res.json(response);
     } catch (e) {
         console.error(e);

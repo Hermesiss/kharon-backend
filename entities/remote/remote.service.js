@@ -11,8 +11,17 @@ import('ip6').then(module => {
  */
 const computers = new Map();
 
-function getUrl(computer) {
-    return `${computer.secure ? 'https' : 'http'}://${computer.ip}:${computer.port}`;
+/**
+ *
+ * @param {RegisterStore} computer
+ * @param {string | number | null} port
+ * @return {string}
+ */
+function getUrl(computer, port = null) {
+    if (!port) {
+        port = computer.port;
+    }
+    return `${computer.secure ? 'https' : 'http'}://${computer.ip}:${port}`;
 }
 
 /**
@@ -99,12 +108,21 @@ async function closeApp(systemUUID, appId) {
     }
 }
 
-async function relayCommand(systemUUID, command, method, body) {
+/**
+ *
+ * @param {string} systemUUID - The system UUID
+ * @param {string} command - The command to relay, like 'api/shutdown'
+ * @param {string} method - The HTTP method to use, like 'GET' or 'POST'
+ * @param {string | null} [port] - Use this to override the port of the computer (optional)
+ * @param {object} [body] - The body to send with the request (optional)
+ * @return {Promise<any>}
+ */
+async function relayCommand(systemUUID, command, method, port = null, body = null) {
     const computer = computers.get(systemUUID);
     if (!computer) {
         throw new Error('Computer not found');
     }
-    const url = `${getUrl(computer)}/relay/${command}`;
+    const url = `${getUrl(computer, port)}/relay/${command}`;
     try {
         const response = await axios({
             method,
