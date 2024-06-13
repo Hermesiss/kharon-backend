@@ -9,7 +9,7 @@ const startMongo = async () => {
     }
 
     const exec = require('child_process').exec
-    const cmd = `${mongoExe} --dbpath ${dbDir} --port ${mongoPort}`
+    const cmd = `${mongoExe} --dbpath ${dbDir} --port ${mongoPort} --bind_ip 0.0.0.0`
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`)

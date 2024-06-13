@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const service = require("./remote.service");
+const appService = require("../apps/app.service");
 
 /**
  * @typedef {Object } RegisterDTO
@@ -45,6 +46,12 @@ router.get('/computers/:id', (req, res) => {
         console.error(e);
         res.status(500).send(`Error getting computer: ${e}`);
     }
+})
+
+router.get('/computers/app/:appcode', async (req, res) => {
+    appService.getByCode(req.params.appcode)
+        .then(app => res.json(app))
+        .catch(err =>  res.status(500).send(`Error getting app: ${err}`));
 })
 
 router.get('/computers/:id/app-list', async (req, res) => {

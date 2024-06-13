@@ -73,7 +73,7 @@ const getFileTree = (folder, relFolder = null) => {
     const fileTree = []
     files.forEach(file => {
         const filePath = path.join(folder, file)
-        const relativePath = path.relative(relFolder, filePath)
+        const relativePath = path.relative(relFolder, filePath).replace(/\\/g, '/')
         const stats = fs.statSync(filePath)
         const creationDate = stats.birthtime
         if (stats.isDirectory()) {
@@ -88,7 +88,8 @@ const getFileTree = (folder, relFolder = null) => {
             const size = stats.size
             const ext = path.extname(file)
             let filetype = 'other'
-            if (ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.gif') {
+            const imgExt = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+            if (imgExt.includes(ext)) {
                 filetype = 'photo'
             } else if (ext === '.mp4' || ext === '.avi' || ext === '.mkv') {
                 filetype = 'video'
