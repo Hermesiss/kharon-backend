@@ -122,7 +122,7 @@ async function relayCommand(systemUUID, command, method, port = null, body = nul
     if (!computer) {
         throw new Error('Computer not found');
     }
-    const url = `${getUrl(computer, port)}/relay/${command}`;
+    const url = `${getUrl(computer, port)}/${command}`;
     try {
         const response = await axios({
             method,

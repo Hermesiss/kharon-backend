@@ -88,7 +88,7 @@ router.post('/computers/:id/app-close', async (req, res) => {
 router.all('/computers/:id/relay', async (req, res) => {
     try {
         const id = req.params.id;
-        const port = req.query.port;
+        const port = req.query.port ?? null;
         const command = req.query.command;
 
         if (!command) {
