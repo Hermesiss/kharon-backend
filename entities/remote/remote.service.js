@@ -123,6 +123,21 @@ async function closeWebsite(systemUUID, website) {
     }
 }
 
+async function closeAllApps(systemUUID) {
+    const computer = computers.get(systemUUID);
+    if (!computer) {
+        throw new Error('Computer not found');
+    }
+    const url = `${getUrl(computer)}/api/close-all`;
+    try {
+        const response = await axios.post(url);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw new Error(`Error closing all apps: ${e}`);
+    }
+}
+
 async function closeApp(systemUUID, appId) {
     const computer = computers.get(systemUUID);
     if (!computer) {
@@ -177,5 +192,6 @@ module.exports = {
     closeApp,
     relayCommand,
     launchWebsite,
-    closeWebsite
+    closeWebsite,
+    closeAllApps
 };

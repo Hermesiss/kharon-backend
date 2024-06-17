@@ -108,6 +108,16 @@ router.post('/computers/:id/website-close', async (req, res) => {
     }
 })
 
+router.post('/computers/:id/close-all', async (req, res) => {
+    try {
+        await service.closeAllApps(req.params.id);
+        res.json("All apps closed successfully");
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(`Error closing all apps: ${e}`);
+    }
+})
+
 router.all('/computers/:id/relay', async (req, res) => {
     try {
         const id = req.params.id;
