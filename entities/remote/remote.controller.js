@@ -31,9 +31,12 @@ router.post('/register', (req, res) => {
 router.get('/computers', (req, res) => {
     const systemUUIDs = service.getComputers();
     const configs = systemUUIDs.map(uuid => {
+        const computer = service.getComputer(uuid);
         return {
             uuid,
-            name: service.getComputer(uuid).computerName};
+            name: computer.computerName,
+            lastUpdate: computer.lastUpdate,
+        };
     });
     res.json({configs});
 })
@@ -51,7 +54,7 @@ router.get('/computers/:id', (req, res) => {
 router.get('/computers/app/:appcode', async (req, res) => {
     appService.getByCode(req.params.appcode)
         .then(app => res.json(app))
-        .catch(err =>  res.status(500).send(`Error getting app: ${err}`));
+        .catch(err => res.status(500).send(`Error getting app: ${err}`));
 })
 
 router.get('/computers/:id/app-list', async (req, res) => {
@@ -82,6 +85,26 @@ router.post('/computers/:id/app-close', async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).send(`Error closing app: ${e}`);
+    }
+})
+
+router.post('/computers/:id/website-launch', async (req, res) => {
+    try {
+        await service.launchWebsite(req.params.id, req.body.website);
+        res.json("Website launched successfully");
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(`Error launching website: ${e}`);
+    }
+})
+
+router.post('/computers/:id/website-close', async (req, res) => {
+    try {
+        await service.closeWebsite(req.params.id, req.body.website);
+        res.json("Website closed successfully");
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(`Error closing website: ${e}`);
     }
 })
 

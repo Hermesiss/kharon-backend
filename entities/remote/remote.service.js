@@ -93,6 +93,36 @@ async function launchApp(systemUUID, appId) {
     }
 }
 
+async function launchWebsite(systemUUID, website) {
+    const computer = computers.get(systemUUID);
+    if (!computer) {
+        throw new Error('Computer not found');
+    }
+    const url = `${getUrl(computer)}/api/website-launch`;
+    try {
+        const response = await axios.post(url, {website});
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw new Error(`Error launching website: ${e}`);
+    }
+}
+
+async function closeWebsite(systemUUID, website) {
+    const computer = computers.get(systemUUID);
+    if (!computer) {
+        throw new Error('Computer not found');
+    }
+    const url = `${getUrl(computer)}/api/website-close`;
+    try {
+        const response = await axios.post(url, {website});
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw new Error(`Error closing website: ${e}`);
+    }
+}
+
 async function closeApp(systemUUID, appId) {
     const computer = computers.get(systemUUID);
     if (!computer) {
@@ -145,5 +175,7 @@ module.exports = {
     getAppList,
     launchApp,
     closeApp,
-    relayCommand
+    relayCommand,
+    launchWebsite,
+    closeWebsite
 };
