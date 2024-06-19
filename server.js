@@ -136,5 +136,5 @@ app.use(errorHandler);
 const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 8080;
 const ip = process.env.NODE_ENV === 'production' ? '0.0.0.0' : process.env.IP;
 const server = app.listen(port, ip, function () {
-    console.log('Server listening on port ' + port);
+    console.log(`Server listening on http://${ip}:${port}`);
 });
