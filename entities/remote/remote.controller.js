@@ -90,7 +90,7 @@ router.post('/computers/:id/app-close', async (req, res) => {
 
 router.post('/computers/:id/website-launch', async (req, res) => {
     try {
-        await service.launchWebsite(req.params.id, req.body.website);
+        await service.launchWebsite(req.params.id, req.body);
         res.json("Website launched successfully");
     } catch (e) {
         console.error(e);

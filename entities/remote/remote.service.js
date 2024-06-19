@@ -93,14 +93,14 @@ async function launchApp(systemUUID, appId) {
     }
 }
 
-async function launchWebsite(systemUUID, website) {
+async function launchWebsite(systemUUID, data) {
     const computer = computers.get(systemUUID);
     if (!computer) {
         throw new Error('Computer not found');
     }
     const url = `${getUrl(computer)}/api/website-launch`;
     try {
-        const response = await axios.post(url, {website});
+        const response = await axios.post(url, data);
         return response.data;
     } catch (e) {
         console.error(e);

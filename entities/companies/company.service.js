@@ -6,7 +6,6 @@ const {Roles} = require("../users/user.model");
 const {getPasswordHash} = require("../users/user.service");
 const {CustomError, ErrorType} = require("../../_helpers/error-handler");
 
-
 async function getAll() {
     return await Company.find();
 }
@@ -44,6 +43,7 @@ async function create(param) {
 
 async function update(id, param) {
     const company = await Company.findById(id);
+    //TODO test company rename
 
     if (!company) throw new CustomError(`Cannot find company ${param.company}`, ErrorType.CompanyNotFound, id, 404);
     if (company.companyPrefix !== param.companyPrefix) {
