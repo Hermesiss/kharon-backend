@@ -13,6 +13,7 @@ function jwt() {
             '/api/users/authenticate',
             '/api/users/register',
             '/api/computer',
+            '/api/ping',
             '/favicon.ico',
             '/',
             {url: /^\/ftp.*/},
