@@ -61,6 +61,10 @@ if (process.env.MONGO_HOST_ENABLED === 'true') {
 
 // api routes
 
+app.use('/api/ping', (req, res) => {
+    res.send('pong');
+});
+
 /**
  * @swagger
  * tags:
