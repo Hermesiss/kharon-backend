@@ -1,4 +1,6 @@
 const axios = require('axios');
+const db = require('_helpers/db');
+const {App} = db;
 
 let ip6;
 import('ip6').then(module => {
@@ -54,6 +56,7 @@ function getComputer(systemUUID) {
 /**
  * @typedef {object} AppList
  * @property {string} appCode
+ * @property {string} [appName]
  * @property {string} installed
  * @property {string} version
  */
@@ -71,7 +74,15 @@ async function getAppList(systemUUID) {
     const url = `${getUrl(computer)}/api/app-list`;
     try {
         const response = await axios.get(url);
-        return response.data.configs;
+
+        const configs = response.data.configs;
+        for (let config of configs) {
+            const app = await App.findOne({appCode: config.appCode});
+            if (app) {
+                config.appName = app.appName;
+            }
+        }
+        return configs;
     } catch (e) {
         console.error(e);
         throw new Error(`Error getting app list: ${e}`);
